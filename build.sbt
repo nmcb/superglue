@@ -27,7 +27,7 @@ Global / onChangedBuildSource   := ReloadOnSourceChanges
 
 lazy val json = project.in(file("json"))
 
-lazy val `super-glue` = (project in file("."))
+lazy val superglue = (project in file("."))
   .aggregate(
     json
   )
