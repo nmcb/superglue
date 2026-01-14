@@ -5,7 +5,7 @@ package service
 
 import scala.annotation.tailrec
 
-object sequencer extends App:
+object sequencer:
 
   private type Graph = Map[Name, Set[Name]]
 
@@ -96,6 +96,3 @@ object sequencer extends App:
         Right(graph.sequenceFor(namesSuppliedByTrigger).map(resolveMethodFor))
     catch
       case DoesNotExist(name) => Left(Error.UnresolvableUndefinedDependency(name))
-
-
-  println(sequence(Set("a", "b", "c"), Set("q")).toOption.get.mkString("\n"))

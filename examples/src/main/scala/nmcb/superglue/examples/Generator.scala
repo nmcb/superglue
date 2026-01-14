@@ -30,15 +30,13 @@ object Generator extends App:
           )
 
       val array: java.util.LinkedList[?] = jsonpath.JsonPath.using(configuration).parse(json).read(path)
-      val result: List[?] = array.asScala.toList.map(_.toString)
-      println(s"result=$result (size=${result.size}) found for jsonPath=$path dataType=$dataType, multiplicity=$multiplicity on json=\n$json")
-      println(s"result=$result")
+      val result: List[String] = array.asScala.toList.map(_.toString)
 
       (dataType, multiplicity) match
-        case (TEXT, One)    => Text(result.head.toString)
-        case (NUMBER, One)  => Number(result.head.toString.toInt)
-        case (TEXT, Many)   => Texts(result.map(_.toString))
-        case (NUMBER, Many) => Numbers(result.map(_.toString.toInt))
+        case (TEXT, One)    => Text(result.head)
+        case (NUMBER, One)  => Number(result.head.toInt)
+        case (TEXT, Many)   => Texts(result)
+        case (NUMBER, Many) => Numbers(result.map(_.toInt))
 
 
   def resolve(request: Set[Name], trigger: Map[Name,Value]): Map[Name,Value] =
@@ -56,14 +54,7 @@ object Generator extends App:
                 val parms = result.filter((name, value) => parameters.contains(name))
                 assert(parms.size == parameters.size, s"Insufficient parameters to call $uriPath required $parameters, resolved ${parms.toJson}")
                 val json = Service.byName(uriPath).call(result)
-                println(s"calling jsonPath=$jsonPath on json=$json")
                 val value = json.resolve(jsonPath, dataType, multiplicity)
                 result + (name -> value)
           .filter((n, v) => request.contains(n))
-
-
-  val trigger = Map("q" -> Number(666))
-  val request = Set("a", "b", "c")
-
-  println(resolve(request, trigger).toJson)
 

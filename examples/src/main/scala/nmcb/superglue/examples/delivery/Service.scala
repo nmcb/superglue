@@ -6,7 +6,6 @@ package delivery
 case class Service(uriPath: UriPath, mock: Json):
   def call(inputParameters: Map[Name,Value]): Json = {
     assert(this.uriPath == uriPath, s"No uri with path $uriPath mocked")
-    println(s"$uriPath called with '${inputParameters.toJson}'")
     mock
   }
 
