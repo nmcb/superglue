@@ -24,10 +24,13 @@ ThisBuild / Test / testOptions  += Tests.Argument("-oD")
 
 Global / onChangedBuildSource   := ReloadOnSourceChanges
 
+lazy val core = project in file("core")
 
-lazy val json = project.in(file("json"))
+lazy val examples = (project in file("examples"))
+  .dependsOn(core)
 
 lazy val superglue = (project in file("."))
   .aggregate(
-    json
+    core,
+    examples
   )
