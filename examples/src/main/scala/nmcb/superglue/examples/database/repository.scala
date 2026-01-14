@@ -21,16 +21,16 @@ object AirNameRepository extends Repository[Name, AirNameEntity]:
   import ResolveMethodType.*
   def key(e: AirNameEntity): Name = e.name
   def shallow: Set[AirNameEntity] = Set(
-    AirNameEntity(name = "a", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "b", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "c", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "d", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "e", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "m", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "n", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "o", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "p", deliveryMethod = DeliverServiceType, dataType = TEXT),
-    AirNameEntity(name = "q", deliveryMethod = TriggerType, dataType = TEXT),
+    AirNameEntity(name = "a", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "b", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "c", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "d", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "e", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "m", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "n", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "o", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "p", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "q", deliveryMethod = TriggerType, dataType = NUMBER),
   )
   def get(n: Name): AirNameEntity =
     findShallow(n)
@@ -39,17 +39,18 @@ object AirNameRepository extends Repository[Name, AirNameEntity]:
       .getOrElse(throw DoesNotExist(s"Air name $n does not exist"))
 
 object DeliveryServicePeriodRepository extends Repository[DeliverServicePeriodEntity, DeliverServicePeriodEntity]:
+  import Multiplicity.*
   def key(e: DeliverServicePeriodEntity): DeliverServicePeriodEntity = e
   def shallow: Set[DeliverServicePeriodEntity] = Set(
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "x1", airName = "a"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "x2", airName = "b"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "y1", airName = "c"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "y2", airName = "d"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "z1", airName = "e"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "q1", airName = "m"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "q2", airName = "n"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "r1", airName = "o"),
-    DeliverServicePeriodEntity(jsonPath = "$", startDate = "2026-01-01", endDate = null, serviceName = "r2", airName = "p"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "x1", airName = "a"),
+    DeliverServicePeriodEntity(jsonPath = "$.result.*", multiplicity = Many, fromDate = "2026-01-01", toDate = null, serviceName = "x2", airName = "b"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "y1", airName = "c"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "y2", airName = "d"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "z1", airName = "e"),
+    DeliverServicePeriodEntity(jsonPath = "$.result.*", multiplicity = Many, fromDate = "2026-01-01", toDate = null, serviceName = "q1", airName = "m"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "q2", airName = "n"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "r1", airName = "o"),
+    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "r2", airName = "p"),
   )
   def findByAirName(n: Name): Set[DeliverServicePeriodEntity] =
     shallow.filter(_.airName == n).map: e =>
@@ -76,19 +77,19 @@ object InputParameterRepository extends Repository[Name, InputParameterEntity]:
   import Multiplicity.*
   def key(e: InputParameterEntity): Name = e.name
   def shallow: Set[InputParameterEntity] = Set(
-    InputParameterEntity(name = "b", serviceName= "x1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "c", serviceName= "x1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "c", serviceName= "x2", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "q", serviceName= "x1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "q", serviceName= "y2", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "q", serviceName= "q2", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "d", serviceName= "x2", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "e", serviceName= "y1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "m", serviceName= "z1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "d", serviceName= "z1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "n", serviceName= "q1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "p", serviceName= "r1", multiplicity = One, startDate = "2026-01-01", endDate = null),
-    InputParameterEntity(name = "o", serviceName= "r2", multiplicity = One, startDate = "2026-01-01", endDate = null),
+    InputParameterEntity(name = "b", serviceName= "x1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "c", serviceName= "x1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "c", serviceName= "x2", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "q", serviceName= "x1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "q", serviceName= "y2", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "q", serviceName= "q2", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "d", serviceName= "x2", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "e", serviceName= "y1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "m", serviceName= "z1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "d", serviceName= "z1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "n", serviceName= "q1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "p", serviceName= "r1", multiplicity = One, fromDate = "2026-01-01", toDate = null),
+    InputParameterEntity(name = "o", serviceName= "r2", multiplicity = One, fromDate = "2026-01-01", toDate = null),
   )
   def findByServiceName(n: Name): Set[InputParameterEntity] =
     shallow.filter(_.serviceName == n)

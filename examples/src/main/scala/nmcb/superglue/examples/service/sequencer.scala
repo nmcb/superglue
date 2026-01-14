@@ -1,13 +1,11 @@
 package nmcb
 package superglue
 package examples
-
-import database.*
-import nmcb.superglue.examples.Error.UnresolvableUndefinedDependency
+package service
 
 import scala.annotation.tailrec
 
-object sequencer extends App:
+object sequencer:
 
   private type Graph = Map[Name, Set[Name]]
 
@@ -52,13 +50,14 @@ object sequencer extends App:
 
   // database access
 
-  import ResolveMethodType.*
+  import database.*
   import ResolveMethod.*
+  import ResolveMethodType.*
 
   private def dependenciesOf(name: Name): Set[Name] =
-    val airName = AirNameRepository.get(name)
+    val entity = AirNameRepository.get(name)
     for
-      period    <- airName.deliveryServicePeriodEntities
+      period    <- entity.deliveryServicePeriodEntities
       service   <- period.deliverServiceEntity.toSet
       parameter <- service.inputParameterEntities
     yield
@@ -72,10 +71,11 @@ object sequencer extends App:
           for
             period    <- entity.deliveryServicePeriodEntities
             service   <- period.deliverServiceEntity.toSet
-            parameter <- service.inputParameterEntities
           yield
             ResolveByDeliverServiceCall(
               airName         = entity.name,
+              dataType        = entity.dataType,
+              multiplicity    = period.multiplicity,
               uriPath         = service.uriPath,
               jsonPath        = period.jsonPath,
               inputParameters = service.inputParameterEntities.map(_.name)
@@ -95,7 +95,4 @@ object sequencer extends App:
       else
         Right(graph.sequenceFor(namesSuppliedByTrigger).map(resolveMethodFor))
     catch
-      case DoesNotExist(name) => Left(UnresolvableUndefinedDependency(name))
-
-
-  println(sequence(Set("a", "b", "c"), Set("q")).toOption.get.mkString("\n"))
+      case DoesNotExist(name) => Left(Error.UnresolvableUndefinedDependency(name))
