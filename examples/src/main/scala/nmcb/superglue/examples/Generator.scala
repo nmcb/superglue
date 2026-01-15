@@ -2,41 +2,36 @@ package nmcb
 package superglue
 package examples
 
-import com.jayway.jsonpath.spi.json.JacksonJsonProvider
-
 object Generator extends App:
   import service.*
   import delivery.*
 
-  import Value.*
-
   extension (json: Json)
     def resolve(path: JsonPath, dataType: DataType, multiplicity: Multiplicity): Value =
       import scala.jdk.CollectionConverters.*
-      import Value.*
-      import DataType.*
-      import Multiplicity.*
-
+      import com.jayway.jsonpath.spi.json.JacksonJsonProvider
       import com.jayway.jsonpath
       import jsonpath.Configuration
       import jsonpath.Option
+
+      import Value.*
+      import DataType.*
+      import Multiplicity.*
 
       val configuration: Configuration =
         Configuration
           .defaultConfiguration()
           .jsonProvider(new JacksonJsonProvider())
-          .addOptions(
-            Option.ALWAYS_RETURN_LIST,
-          )
+          .addOptions(Option.ALWAYS_RETURN_LIST)
 
       val array: java.util.LinkedList[?] = jsonpath.JsonPath.using(configuration).parse(json).read(path)
       val result: List[String] = array.asScala.toList.map(_.toString)
 
       (dataType, multiplicity) match
-        case (TEXT, One)    => Text(result.head)
-        case (NUMBER, One)  => Number(result.head.toInt)
-        case (TEXT, Many)   => Texts(result)
-        case (NUMBER, Many) => Numbers(result.map(_.toInt))
+        case (TextType, One)    => Text(result.head)
+        case (NumberType, One)  => Number(result.head.toInt)
+        case (TextType, Many)   => Texts(result)
+        case (NumberType, Many) => Numbers(result.map(_.toInt))
 
 
   def resolve(request: Set[Name], trigger: Map[Name,Value]): Map[Name,Value] =

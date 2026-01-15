@@ -59,7 +59,7 @@ object sequencer:
     for
       period        <- entity.deliveryServicePeriodEntities
       service       <- period.deliverServiceEntity.toSet
-      parameterName <- (service.inputParameterEntities.map(_.name) ++ period.jsonPath.parameterNames)
+      parameterName <- service.inputParameterEntities.map(_.name) ++ period.jsonPath.parameterNames
     yield
       parameterName
 
