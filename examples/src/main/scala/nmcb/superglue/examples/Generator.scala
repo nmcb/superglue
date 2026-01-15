@@ -53,7 +53,7 @@ object Generator extends App:
               case ResolveByDeliverServiceCall(name: Name, dataType: DataType, multiplicity: Multiplicity, uriPath: UriPath, jsonPath: JsonPath, parameters: Set[Name]) =>
                 assert((parameters diff result.keySet).isEmpty, s"Insufficient parameters to call $uriPath required $parameters, resolved ${result.toJson}")
                 val json = Service.byName(uriPath).call(result)
-                val resolvedJsonPath = jsonPath.resolveParameterNames(result)
+                val resolvedJsonPath = jsonPath.replaceAllParameters(result)
                 val value = json.resolve(resolvedJsonPath, dataType, multiplicity)
                 result + (name -> value)
           .filter((n, v) => request.contains(n))

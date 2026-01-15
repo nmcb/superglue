@@ -23,7 +23,7 @@ extension (path: JsonPath)
   def hasParameterNames: Boolean =
     parameterNames.nonEmpty
 
-  def resolveParameterNames(parameters: Map[Name,Value]): JsonPath =
+  def replaceAllParameters(parameters: Map[Name,Value]): JsonPath =
     assert((parameterNames diff parameters.keySet).isEmpty, s"insufficient replacements, given ${parameters.keySet} required $parameterNames")
     val resolved =
       parameters

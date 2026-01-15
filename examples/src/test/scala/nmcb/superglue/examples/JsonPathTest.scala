@@ -12,6 +12,6 @@ class JsonPathTest extends AnyFunSuite:
     assertResult(true)("$.{airName-1}.book[?(@.price < {airName_2})]".hasParameterNames)
     assertResult(false)("$.library.book[?(@.price < 10)]".hasParameterNames)
 
-  test("resolve"):
+  test("replaceAllParameters"):
     val parms = Map[Name,Value]("airName-1" -> Text("library"), "airName_2" -> Number(10))
-    assertResult("$.library.book[?(@.price < 10)]")("$.{airName-1}.book[?(@.price < {airName_2})]".format(parms))
+    assertResult("$.library.book[?(@.price < 10)]")("$.{airName-1}.book[?(@.price < {airName_2})]".replaceAllParameters(parms))
