@@ -3,28 +3,41 @@ package superglue
 package examples
 package delivery
 
-import nmcb.superglue.examples.database.InputParameterRepository
+import nmcb.superglue.examples.database.{AirNameRepository, InputParameterRepository}
 
 case class Service(name: Name, uriPath: UriPath, mock: Json):
 
   // TODO add assert method, allow tempory access to repositories
   def assertCorrectInputParameters(inputParameters: Map[Name, Value]): Unit =
-    import Value.*
     import Multiplicity.*
+    import DataType.*
     val requiredParameters     = InputParameterRepository.findByServiceName(name)
     val requiredParameterNames = requiredParameters.map(_.name)
+    val requiredAirNames       = requiredParameterNames.flatMap(AirNameRepository.findShallow)
     assert(
-      (requiredParameterNames diff inputParameters.keySet).isEmpty,
-      s"service called with insufficient parameter names: ${inputParameters.keySet}, required=$requiredParameterNames"
+      (requiredParameterNames diff inputParameters.keySet).isEmpty
+
+      , s"service $name called with insufficient parameter names: ${inputParameters.keySet}, required=$requiredParameterNames"
     )
     assert(
       requiredParameterNames.forall: name =>
         inputParameters(name) match
-          case Text(value)     => requiredParameters.find(p => p.name == name).forall(_.multiplicity == One)
-          case Number(value)   => requiredParameters.find(p => p.name == name).forall(_.multiplicity == One)
-          case Texts(values)   => requiredParameters.find(p => p.name == name).forall(_.multiplicity == Many)
-          case Numbers(values) => requiredParameters.find(p => p.name == name).forall(_.multiplicity == Many),
-      s"service called with wrong parameters: ${inputParameters}, required=$requiredParameters"
+          case Value.Text(value)     => requiredParameters.find(p => p.name == name).forall(_.multiplicity == One)
+          case Value.Number(value)   => requiredParameters.find(p => p.name == name).forall(_.multiplicity == One)
+          case Value.Texts(values)   => requiredParameters.find(p => p.name == name).forall(_.multiplicity == Many)
+          case Value.Numbers(values) => requiredParameters.find(p => p.name == name).forall(_.multiplicity == Many)
+
+      , s"service $name called with wrong multiplicity: $inputParameters, required=$requiredParameters"
+    )
+    assert(
+      requiredParameterNames.forall: name =>
+        inputParameters(name) match
+          case Value.Text(value)     => requiredAirNames.find(p => p.name == name).forall(_.dataType == TextType)
+          case Value.Number(value)   => requiredAirNames.find(p => p.name == name).forall(_.dataType == NumberType)
+          case Value.Texts(values)   => requiredAirNames.find(p => p.name == name).forall(_.dataType == TextType)
+          case Value.Numbers(values) => requiredAirNames.find(p => p.name == name).forall(_.dataType == NumberType)
+
+      , s"service $name called with wrong data type: $inputParameters, required=$requiredAirNames"
     )
 
   def call(inputParameters: Map[Name,Value]): Json = {
@@ -96,12 +109,12 @@ object Service:
         |       "code": "00AA",
         |       "vs": [{ "vc": "00AA01", "hv": 0 }, { "vc": "00AA02", "hv": 1}],
         |       "dib": "2026-01-01"
-        |     },  
+        |     },
         |     {
         |       "code": "00AB",
         |       "vs": [{ "vc": "00AB01", "hv": 1 }, { "vc": "00AB02", "hv": 0}],
         |       "dib": "2026-01-02"
-        |     }  
+        |     }
         |   ]
         |}
         |""".stripMargin),
@@ -112,12 +125,12 @@ object Service:
         |       "code": "00AA",
         |       "vs": [{ "vc": "00AA01", "al": 200 }, { "vc": "00AA02", "al": 2}],
         |       "al": 202
-        |     },  
+        |     },
         |     {
         |       "code": "00AB",
         |       "vs": [{ "vc": "00AB01", "al": 100 }, { "vc": "00AB02", "al": 1}],
         |       "al": 101
-        |     }  
+        |     }
         |   ]
         |}
         |""".stripMargin)

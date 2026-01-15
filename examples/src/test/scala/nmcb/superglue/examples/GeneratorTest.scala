@@ -9,7 +9,7 @@ import Value.*
 class GeneratorTest extends AnyFunSuite:
 
   test("resolve"):
-    val trigger = Map("t-oics" -> Numbers(List(666, 999)))
+    val trigger = Map("t-oics" -> Texts(List("00AA", "00AB")))
     val request = Set("a", "b", "c")
     val result  = Generator.resolve(request, trigger).toJson
     assertResult("""{"a":"text","b":[101,102],"c":103}""")(result)
