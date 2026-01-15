@@ -38,33 +38,39 @@ extension (path: JsonPath)
 extension (d: Date)
   def toLocalDate: LocalDate = LocalDate.parse(d)
 
+
 enum Multiplicity:
   case One, Many
+
 
 enum DataType:
   case TextType, NumberType
 
+
 case class Period(startDate: Date, endDate: Date):
   def from: LocalDate = startDate.toLocalDate
   def to: Option[LocalDate] = Option(endDate).map(_.toLocalDate)
+
 
 trait WithPeriod:
   def fromDate: Date
   def toDate: Date
   def period: Period = Period(fromDate, toDate)
 
+
 enum ResolveMethodType:
   case DeliverServiceType, CalculationServiceType, TriggerType
+
 
 enum ResolveMethod:
   case ResolveByTriggerInput(airName: Name)
   case ResolveByDeliverServiceCall(airName: Name, dataType: DataType, multiplicity: Multiplicity, uriPath: UriPath, jsonPath: JsonPath, inputParameters: Set[Name])
 
+
 enum Error:
   case UnresolvableCyclicDependency(dependencies: Set[Name])
   case UnresolvableUndefinedDependency(name: Name)
 
-case class AirName(name: Name, dataType: DataType, multiplicity: Multiplicity, resolve: Error)
 
 enum Value:
   case Text(value: String)
@@ -92,6 +98,8 @@ extension (nv: (Name, Value))
     val (name, value) = nv
     s"\"$name\":${value.toJson}"
 
+
 extension (parameters: Map[Name, Value])
+  
   def toJson: Json =
     parameters.map(_.toJson).mkString("{", ",", "}")

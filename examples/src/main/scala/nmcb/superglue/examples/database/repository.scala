@@ -56,6 +56,7 @@ object DeliveryServicePeriodRepository extends Repository[DeliverServicePeriodEn
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "q2", airName = "n"),
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "r1", airName = "o"),
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "r2", airName = "p"),
+    
     DeliverServicePeriodEntity(jsonPath = "$.ois[?(@.code == {an-code})].dib", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "rio", airName = "an-dib"),
   )
   def findByAirName(n: Name): Set[DeliverServicePeriodEntity] =

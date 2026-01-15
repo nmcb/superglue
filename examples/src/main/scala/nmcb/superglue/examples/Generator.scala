@@ -2,8 +2,6 @@ package nmcb
 package superglue
 package examples
 
-import com.jayway.jsonpath.spi.json.JacksonJsonProvider
-
 object Generator extends App:
   import service.*
   import delivery.*
@@ -11,13 +9,14 @@ object Generator extends App:
   extension (json: Json)
     def resolve(path: JsonPath, dataType: DataType, multiplicity: Multiplicity): Value =
       import scala.jdk.CollectionConverters.*
-      import Value.*
-      import DataType.*
-      import Multiplicity.*
-
+      import com.jayway.jsonpath.spi.json.JacksonJsonProvider
       import com.jayway.jsonpath
       import jsonpath.Configuration
       import jsonpath.Option
+
+      import Value.*
+      import DataType.*
+      import Multiplicity.*
 
       val configuration: Configuration =
         Configuration
