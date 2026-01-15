@@ -42,7 +42,7 @@ enum Multiplicity:
   case One, Many
 
 enum DataType:
-  case TEXT, NUMBER
+  case TextType, NumberType
 
 case class Period(startDate: Date, endDate: Date):
   def from: LocalDate = startDate.toLocalDate
