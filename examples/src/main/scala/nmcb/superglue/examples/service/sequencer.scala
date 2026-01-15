@@ -57,11 +57,11 @@ object sequencer:
   private def dependenciesOf(name: Name): Set[Name] =
     val entity = AirNameRepository.get(name)
     for
-      period    <- entity.deliveryServicePeriodEntities
-      service   <- period.deliverServiceEntity.toSet
-      parameter <- service.inputParameterEntities
+      period        <- entity.deliveryServicePeriodEntities
+      service       <- period.deliverServiceEntity.toSet
+      parameterName <- (service.inputParameterEntities.map(_.name) ++ period.jsonPath.parameterNames)
     yield
-      parameter.name
+      parameterName
 
   private def resolveMethodFor(name: Name): ResolveMethod =
     val entity = AirNameRepository.get(name)

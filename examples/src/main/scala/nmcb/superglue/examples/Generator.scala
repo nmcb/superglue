@@ -51,10 +51,9 @@ object Generator extends App:
                 val value = trigger.getOrElse(name, sys.error(s"Unresolved trigger value for: $name"))
                 result + (name -> value)
               case ResolveByDeliverServiceCall(name: Name, dataType: DataType, multiplicity: Multiplicity, uriPath: UriPath, jsonPath: JsonPath, parameters: Set[Name]) =>
-                val parms = result.filter((name, value) => parameters.contains(name))
-                assert(parms.size == parameters.size, s"Insufficient parameters to call $uriPath required $parameters, resolved ${parms.toJson}")
+                assert((parameters diff result.keySet).isEmpty, s"Insufficient parameters to call $uriPath required $parameters, resolved ${result.toJson}")
                 val json = Service.byName(uriPath).call(result)
-                val value = json.resolve(jsonPath, dataType, multiplicity)
+                val resolvedJsonPath = jsonPath.replaceAllParameters(result)
+                val value = json.resolve(resolvedJsonPath, dataType, multiplicity)
                 result + (name -> value)
           .filter((n, v) => request.contains(n))
-
