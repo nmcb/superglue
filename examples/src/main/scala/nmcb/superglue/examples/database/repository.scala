@@ -27,7 +27,7 @@ object AirNameRepository extends Repository[Name, AirNameEntity]:
     AirNameEntity(name = "d", deliveryMethod = DeliverServiceType, dataType = NUMBER),
     AirNameEntity(name = "e", deliveryMethod = DeliverServiceType, dataType = NUMBER),
     AirNameEntity(name = "m", deliveryMethod = DeliverServiceType, dataType = NUMBER),
-    AirNameEntity(name = "n", deliveryMethod = DeliverServiceType, dataType = NUMBER),
+    AirNameEntity(name = "n", deliveryMethod = DeliverServiceType, dataType = TEXT),
     AirNameEntity(name = "o", deliveryMethod = DeliverServiceType, dataType = NUMBER),
     AirNameEntity(name = "p", deliveryMethod = DeliverServiceType, dataType = NUMBER),
     AirNameEntity(name = "q", deliveryMethod = TriggerType, dataType = NUMBER),
@@ -44,7 +44,7 @@ object DeliveryServicePeriodRepository extends Repository[DeliverServicePeriodEn
   def shallow: Set[DeliverServicePeriodEntity] = Set(
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "x1", airName = "a"),
     DeliverServicePeriodEntity(jsonPath = "$.result.*", multiplicity = Many, fromDate = "2026-01-01", toDate = null, serviceName = "x2", airName = "b"),
-    DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "y1", airName = "c"),
+    DeliverServicePeriodEntity(jsonPath = "$.{n}", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "y1", airName = "c"),
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "y2", airName = "d"),
     DeliverServicePeriodEntity(jsonPath = "$.result", multiplicity = One, fromDate = "2026-01-01", toDate = null, serviceName = "z1", airName = "e"),
     DeliverServicePeriodEntity(jsonPath = "$.result.*", multiplicity = Many, fromDate = "2026-01-01", toDate = null, serviceName = "q1", airName = "m"),

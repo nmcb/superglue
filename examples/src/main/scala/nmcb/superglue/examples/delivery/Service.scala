@@ -26,7 +26,7 @@ object Service:
         |""".stripMargin),
     Service(uriPath = "http://y1/c", mock =
       """{
-        |   "result": 103
+        |   "nValue": 103
         |}
         |""".stripMargin),
     Service(uriPath = "http://y2/d", mock =
@@ -46,7 +46,7 @@ object Service:
         |""".stripMargin),
     Service(uriPath = "http://q2/n", mock =
       """{
-        |   "result": 203
+        |   "result": "nValue"
         |}
         |""".stripMargin),
     Service(uriPath = "http://r1/o", mock =
