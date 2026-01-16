@@ -1,9 +1,14 @@
-package nmcb.superglue.examples
+package nmcb
+package superglue
+package examples
 
-import nmcb.superglue.examples.Value.*
 import org.scalatest.funsuite.AnyFunSuite
 
 class JsonPathTest extends AnyFunSuite:
+  
+  import client.*
+  import Value.*
+  
 
   test("parameterNames"):
     assertResult(Set("airName-1", "airName_2"))("$.{airName-1}.book[?(@.price < {airName_2})]".parameterNames)
