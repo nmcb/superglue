@@ -1,11 +1,10 @@
 package nmcb
 package superglue
 package examples
-package service
 
 import scala.annotation.tailrec
 
-object sequencer:
+object Sequencer:
 
   private type Graph = Map[Name, Set[Name]]
 
@@ -50,9 +49,9 @@ object sequencer:
 
   // database access
 
-  import database.*
   import ResolveMethod.*
   import ResolveMethodType.*
+  import database.*
 
   private def dependenciesOf(name: Name): Set[Name] =
     val entity = AirNameRepository.get(name)
@@ -72,21 +71,23 @@ object sequencer:
             period    <- entity.deliveryServicePeriodEntities
             service   <- period.deliverServiceEntity.toSet
           yield
-            ResolveByDeliverServiceCall(
+            ResolveByDeliveryService(
               airName         = entity.name,
               dataType        = entity.dataType,
               multiplicity    = period.multiplicity,
               uriPath         = service.uriPath,
               jsonPath        = period.jsonPath,
-              inputParameters = service.inputParameterEntities.map(_.name)
+              inputParameters = service.inputParameterEntities.map(p => p.name -> p.multiplicity).toMap
             )
-        assert(result.size == 1, s"result size was: ${result.size}")
+        assert(result.size == 1, s"result size was: ${result.size} when revolving name $name")
         result.head
       case TriggerType =>
         ResolveByTriggerInput(name)
       case CalculationServiceType =>
         ???
 
+  // api
+  
   def sequence(namesToResolve: Set[Name], namesSuppliedByTrigger: Set[Name]): Either[Error,Vector[ResolveMethod]] =
     try
       val graph = buildGraph(namesToResolve)
