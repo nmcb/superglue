@@ -3,7 +3,7 @@ package superglue
 package examples
 package client
 
-import nmcb.superglue.examples.database.{AirNameRepository, InputParameterRepository}
+import database.*
 
 case class Service(name: Name, uriPath: UriPath, mock: Json):
 
