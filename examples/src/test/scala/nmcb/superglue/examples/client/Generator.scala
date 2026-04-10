@@ -4,7 +4,7 @@ package examples
 package client
 
 
-object Generator extends App:
+object Generator:
 
   extension (json: Json)
     
@@ -33,7 +33,6 @@ object Generator extends App:
         case (NumberType, One)  => Number(result.head.toInt)
         case (TextType, Many)   => Texts(result)
         case (NumberType, Many) => Numbers(result.map(_.toInt))
-
 
   def resolve(request: Set[Name], trigger: Map[Name,Value], debug: Boolean = false): Map[Name,Value] =
     import ResolveMethod.*
