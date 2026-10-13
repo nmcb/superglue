@@ -1,9 +1,9 @@
-ThisBuild / scalaVersion := "3.8.4"
+ThisBuild / scalaVersion := "3.9.0"
 ThisBuild / version      := "0.1.0"
 
 ThisBuild / libraryDependencies ++= Seq(
-  "org.slf4j"                  %  "slf4j-jdk14"      % "2.0.18",
-  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.22.1",
+  "org.slf4j"                  %  "slf4j-jdk14"      % "2.0.19",
+  "com.fasterxml.jackson.core" %  "jackson-databind" % "2.22.2",
   "com.jayway.jsonpath"        %  "json-path"        % "3.0.0",
   "org.scalatest"              %% "scalatest"        % "3.2.20"   % "test"
 )
